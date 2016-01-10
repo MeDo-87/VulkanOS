@@ -4,7 +4,7 @@
 CC = ../cross-compiler/bin/bin/i686-elf-gcc
 LD = ../cross-compiler/bin/bin/i686-elf-ld
 
-SRC = main.c common.c monitor.c descriptorTables.c isr.c timer.c keyboard.c
+SRC = main.c common.c monitor.c descriptorTables.c isr.c timer.c heap.c keyboard.c
 
 ASM = boot.S interrupt.S
 
