@@ -143,7 +143,4 @@ static void keyboardCallback(struct Regs r)
 void initKeyboard(UInt32 frequency)
 {
 	InstallIrqHandler(1,&keyboardCallback);
-	putString("KeyboardStatus address: ");
-	WriteHex((UInt32)&KeyboardStatus);
-	putc('\n');
 }

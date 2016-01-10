@@ -22,7 +22,7 @@ all:	kernel
 	@echo compiling $(TARGET)
 
 kernel: $(ASMOBJS) $(OBJS)
-	$(LD) $(LDFLAGS) -o $(TARGET) $(OBJS) $(ASMOBJS) $(LIBS)
+	$(LD) $(LDFLAGS)  -o $(TARGET)  $(ASMOBJS) $(OBJS) $(LIBS)
 
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@ 

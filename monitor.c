@@ -5,6 +5,8 @@
 
 static UInt16* videoMemory = VMEMORY;
 static UInt8 x, y;
+static UInt8 Colour = (BLACK << 4) | (WHITE & 0x0F);
+
 
 static void moveCursor()
 {
@@ -37,15 +39,13 @@ static void scroll()
 	}
 }
 
-
+void SetColour(enum DisplayColour foreground, enum DisplayColour background)
+{
+	Colour = (background << 4) | (foreground & 0x0f);
+}
 void putc(char c)
 {
-	UInt8 bgColor = 0;
-	UInt8 fgColor = 15;
-	
-	UInt8 attributeByte = (bgColor << 4) | (fgColor & 0x0F);
-
-	UInt16 attribute = attributeByte << 8;
+	UInt16 attribute = Colour << 8;
 	
 	UInt16 *location;
 

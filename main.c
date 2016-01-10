@@ -8,13 +8,10 @@ int main (struct multiboot *mBoot)
 	initDescriptorTables();
 	asm volatile("sti"); 
 	clear();
+	SetColour(BLUE,BLACK);
 	putString("Ela Rocks\n");
 	
-		WriteDec(10);
-		putc(' ');
-
-	WriteDec(2564);
-	putc(' ');
+	SetColour(WHITE,BLACK);
 		
 	
 	initTimer(18);
