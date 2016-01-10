@@ -57,4 +57,4 @@ start:
   cli
   call main
   jmp $
-
+  startSize: equ $ - start
