@@ -1,1 +1,2 @@
-boot.asm~ boot.o~ common.c~ common.h~ descriptorTables.c~ descriptorTables.h~ interrupt.asm~ isr.c~ isr.h~ keyboard.c~ keyboard.h~ link.ld~ main.c~ Makefile~ Makefile_eee~ monitor.c~ monitor.h~ rubBochs.sh~ runBochs.sh~ timer.c~ timer.h~ update_image.sh~
+*.*~ 
+boot.o~ common.c~ common.h~ descriptorTables.c~ descriptorTables.h~ interrupt.asm~ isr.c~ isr.h~ keyboard.c~ keyboard.h~ link.ld~ main.c~ Makefile~ Makefile_eee~ monitor.c~ monitor.h~ rubBochs.sh~ runBochs.sh~ timer.c~ timer.h~ update_image.sh~
