@@ -1,4 +1,5 @@
 #include "keyboard.h"
+#include "Utils.h"
 
 #define CTRL 1
 #define SHIFT 2
@@ -147,4 +148,5 @@ Keyboard::Keyboard()
 void Keyboard::initKeyboard()
 {
     InstallIrqHandler(1, &keyboardCallback);
+	GConsole << "Keyboard Installed";
 }

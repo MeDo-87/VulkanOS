@@ -5,7 +5,7 @@
 #include "keyboard.h"
 #include "ctordtor.h"
 
-static stdio::Monitor console;
+#include "Utils.h"
 
 int main (struct multiboot *mBoot)
 {
@@ -23,7 +23,7 @@ int main (struct multiboot *mBoot)
 		
 	
 	initTimer(18);
-	 console << "Keyboard driver installed\n";
+	stdio::Keyboard::initKeyboard();
 	//putc(35/0);
 	callDestructors();
 	return 0xDEADBABE;
