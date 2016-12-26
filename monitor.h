@@ -9,6 +9,8 @@ namespace stdio
 class Monitor
 {
 	public:
+Monitor();
+
 /* Hardware text mode color constants. */
 enum DisplayColour {
 	BLACK = 0,
@@ -44,7 +46,11 @@ static void putString(const char *c);
 static void WriteHex(UInt32 n);
 
 static void WriteDec(UInt32 n);
-
+Monitor operator<< (const char* c)
+{
+	putString(c);
+	return *this;
+}
 private:
 static void moveCursor();
 static void scroll();

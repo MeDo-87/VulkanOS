@@ -8,6 +8,13 @@ static UInt16* videoMemory = VMEMORY;
 static UInt8 x, y;
 static UInt8 Colour = (Monitor::BLACK << 4) | (Monitor::WHITE & 0x0F);
 
+
+Monitor::Monitor()
+{
+	SetColour(WHITE,BLACK);
+}
+
+
 void Monitor::moveCursor()
 {
 	UInt16 cursorLocation = y*80 + x;

@@ -3,10 +3,17 @@
 #include "descriptorTables.h"
 #include "timer.h"
 #include "keyboard.h"
+#include "ctordtor.h"
+
+static stdio::Monitor console;
+
 int main (struct multiboot *mBoot)
 {
 	(void) mBoot;
+
+	
 	initDescriptorTables();
+	callConstructors();
 	asm volatile("sti"); 
 	stdio::Monitor::clear();
 	stdio::Monitor::SetColour(stdio::Monitor::BLUE,stdio::Monitor::BLACK);
@@ -16,7 +23,8 @@ int main (struct multiboot *mBoot)
 		
 	
 	initTimer(18);
-	stdio::Keyboard::initKeyboard();
+	 console << "Keyboard driver installed\n";
 	//putc(35/0);
+	callDestructors();
 	return 0xDEADBABE;
 }
