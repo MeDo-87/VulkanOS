@@ -5,7 +5,7 @@ static UInt32 placementAddress = (UInt32)&end;
 
 void* malloc(UInt32 size, UInt32 aligned , UInt32* phys)
 {
-	if(aligned ==1 && (placementAddress & 0xFFFFFF000))
+	if(aligned ==1 && (placementAddress & 0xFFFFFF00))
 	{
 		placementAddress &= 0xFFFFF000;
 		placementAddress += 0x1000;
@@ -16,7 +16,7 @@ void* malloc(UInt32 size, UInt32 aligned , UInt32* phys)
 	}
 	UInt32 tmp = placementAddress;
 	placementAddress += size;
-	return tmp;
+	return reinterpret_cast<void*>(tmp);
 	
 }
 void* kmalloc(UInt32 size) //Just allocate a required memory

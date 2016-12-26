@@ -26,7 +26,7 @@ enum DisplayColour {
 	LIGHT_RED = 12,
 	LIGHT_MAGENTA = 13,
 	LIGHT_BROWN = 14,
-	WHITE = 15,
+	WHITE = 15
 };
 
 static void SetColour(enum DisplayColour foreground, enum DisplayColour backGround);
@@ -39,6 +39,7 @@ static void clear();
 
 //output a null-terminated ASCII string
 static void putString(char *c);
+static void putString(const char *c);
 
 static void WriteHex(UInt32 n);
 
@@ -49,5 +50,5 @@ static void moveCursor();
 static void scroll();
 
 };
-};
+}
 #endif

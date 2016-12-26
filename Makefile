@@ -9,7 +9,8 @@ SRC = main.c common.c monitor.c descriptorTables.c isr.c timer.c heap.c keyboard
 ASM = boot.S interrupt.S
 
 TARGET = kernel
-CFLAGS= -nostdlib -nostdinc -fno-builtin -fno-stack-protector -fpermissive -fno-exceptions -funsigned-char -ffreestanding -fomit-frame-pointer -mno-red-zone -mno-3dnow -mno-mmx -fno-asynchronous-unwind-tables
+CFLAGS=  -nostdlib -nostdinc -fno-builtin -fno-stack-protector -Wall -Wextra -pedantic -fno-exceptions -funsigned-char 
+CFLAGS+= -ffreestanding -fomit-frame-pointer -mno-red-zone -mno-3dnow -mno-mmx -fno-asynchronous-unwind-tables
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 

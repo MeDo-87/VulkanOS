@@ -10,7 +10,7 @@ void *irqRoutines[16] = {0,0,0,0,0,0,0,0,
 
 void InstallIrqHandler(UInt32 irq, void (*handler)(struct Regs r))
 {
-	irqRoutines[irq] = handler;
+	irqRoutines[irq] = reinterpret_cast<void*>(handler);
 }
 
 void UninstallIrqHandler(UInt32 irq)
@@ -24,7 +24,7 @@ void irqHandler(struct Regs r)
 	if(irqRoutines[r.int_no-32] != 0)
 	{
 		void (*handler)(struct Regs r);
-		handler = irqRoutines[r.int_no-32];
+		handler = reinterpret_cast<void (*)(struct Regs r)>(irqRoutines[r.int_no-32]);
 		handler(r);
 	}
         

@@ -1,6 +1,7 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
+typedef unsigned long UInt64;
 typedef unsigned int	UInt32;
 typedef 	 int	Int32;
 typedef unsigned short	UInt16;

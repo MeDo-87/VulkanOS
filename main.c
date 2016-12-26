@@ -5,12 +5,13 @@
 #include "keyboard.h"
 int main (struct multiboot *mBoot)
 {
+	(void) mBoot;
 	initDescriptorTables();
 	asm volatile("sti"); 
 	stdio::Monitor::clear();
 	stdio::Monitor::SetColour(stdio::Monitor::BLUE,stdio::Monitor::BLACK);
-	stdio::Monitor::putString("Ela Rocks\n");
-	
+	stdio::Monitor::putString("Welcome to VulcanOS Ver. 0.0.1\n");
+	stdio::Monitor::putString("Developed by MeDo87\n");
 	stdio::Monitor::SetColour(stdio::Monitor::WHITE,stdio::Monitor::BLACK);
 		
 	

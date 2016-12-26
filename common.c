@@ -10,28 +10,28 @@ UInt16 ReadWord(UInt16 port)
 //Memory functions
 void memcpy(void* src, void* dest, UInt32 length)
 {
-	int i;	
+	
 	if(src == 0 || dest == 0 || length < 1)
 	{
 		return;
 	}
 	
-	for(i = 0; i < length; i++, src++, dest++)
+	for(unsigned int i = 0; i < length; i++)
 	{
-		*((UInt8*)dest) = *((UInt8*)src);
+		((UInt8*)dest)[i]= ((UInt8*)src)[i];
 	}
 	return;
 }
 void memset(void* dest, UInt8 data, UInt32 length)
 {
-	int i;	
+	
 	if(dest == 0 || length < 1)
 	{
 		return;
 	}
-	for(i = 0; i < length; i++, dest++)
+	for(unsigned int i = 0; i < length; i++)
 	{
-		*((UInt8*)dest) = data;
+		((UInt8*)dest)[i] = data;
 	}
 	return;
 }

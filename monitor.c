@@ -110,7 +110,14 @@ void Monitor::putString(char *c)
 	}
 }
 
-
+void Monitor::putString(const char *c)
+{
+	int i = 0;
+	while(c[i])
+	{
+		putc(c[i++]);
+	}
+}
 
 
 void Monitor::WriteHex(UInt32 n)
@@ -122,7 +129,7 @@ void Monitor::WriteHex(UInt32 n)
 	{	
 		
 		UInt8 Fourbit = (*(ptr) & 0xF0) >> 4;
-		if(Fourbit <= 9 && Fourbit >= 0)
+		if(Fourbit <= 9)
 		{
 			putc(Fourbit + 0x30);
 		}
@@ -132,7 +139,7 @@ void Monitor::WriteHex(UInt32 n)
 		}
 
 		Fourbit = *(ptr--) & 0x0F;
-		if(Fourbit <= 9 && Fourbit >= 0)
+		if(Fourbit <= 9 )
 		{
 			putc(Fourbit + 0x30);
 		}

@@ -8,8 +8,9 @@
 #define SCROL	  6
 
 
+extern 
 
-unsigned char kbdus[128] =
+unsigned char qwerty[128] =
 {
     0,  27, '1', '2', '3', '4', '5', '6', '7', '8',	/* 9 */
   '9', '0', '-', '=', '\b',	/* Backspace */
@@ -64,7 +65,7 @@ static void keyboardCallback(struct Regs r)
         /* You can use this one to see if the user released the
         *  shift, alt, or control keys... */
 	//ascii &= 0b01111111;
-	ascii =  kbdus[scancode & 0b01111111]; 
+	ascii =  qwerty[scancode & 0b01111111]; 
 	if(ascii == CAPS || ascii == NUMLOCK || ascii == SCROL) 
 	{
 		while ((ReadByte(0x64) & 2) != 0); 
@@ -91,7 +92,7 @@ static void keyboardCallback(struct Regs r)
     }
     else
     {
-	ascii =  kbdus[scancode];     
+	ascii =  qwerty[scancode];     
 	UInt8 caps = 0;
 	UInt8 shift = ((KeyboardStatus >> 2) & 0x01);
 	UInt8 capslock = ((KeyboardStatus >> 5) & 0x01);
@@ -149,6 +150,6 @@ using namespace stdio;
 	}
 	void Keyboard::initKeyboard()
 	{
-		Keyboard Instance = Keyboard();
+		InstallIrqHandler(1,&keyboardCallback);
 	}
 
