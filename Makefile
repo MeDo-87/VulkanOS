@@ -1,7 +1,7 @@
 # Makefile for VulcanOS Kernel
 
 
-CC = ../cross-compiler/bin/bin/i686-elf-gcc
+CC = ../cross-compiler/bin/bin/i686-elf-g++
 LD = ../cross-compiler/bin/bin/i686-elf-ld
 
 SRC = main.c common.c monitor.c descriptorTables.c isr.c timer.c heap.c keyboard.c
@@ -9,7 +9,7 @@ SRC = main.c common.c monitor.c descriptorTables.c isr.c timer.c heap.c keyboard
 ASM = boot.S interrupt.S
 
 TARGET = kernel
-CFLAGS= -nostdlib -nostdinc -fno-builtin -fno-stack-protector
+CFLAGS= -nostdlib -nostdinc -fno-builtin -fno-stack-protector -fpermissive -fno-exceptions -funsigned-char -ffreestanding -fomit-frame-pointer -mno-red-zone -mno-3dnow -mno-mmx -fno-asynchronous-unwind-tables
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 

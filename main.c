@@ -7,15 +7,15 @@ int main (struct multiboot *mBoot)
 {
 	initDescriptorTables();
 	asm volatile("sti"); 
-	clear();
-	SetColour(BLUE,BLACK);
-	putString("Ela Rocks\n");
+	stdio::Monitor::clear();
+	stdio::Monitor::SetColour(stdio::Monitor::BLUE,stdio::Monitor::BLACK);
+	stdio::Monitor::putString("Ela Rocks\n");
 	
-	SetColour(WHITE,BLACK);
+	stdio::Monitor::SetColour(stdio::Monitor::WHITE,stdio::Monitor::BLACK);
 		
 	
 	initTimer(18);
-	initKeyboard();
+	stdio::Keyboard::initKeyboard();
 	//putc(35/0);
 	return 0xDEADBABE;
 }

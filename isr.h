@@ -1,6 +1,10 @@
 #ifndef ISR_H
 #define ISR_H
 #include "common.h"
+#ifdef __cplusplus /* only defined in C++ code */
+extern "C" {
+#endif
+
 /* This defines what the stack looks like after an ISR was running */
 struct Regs
 {
@@ -12,6 +16,8 @@ struct Regs
 
 void InstallIrqHandler(UInt32 irq, void (*handler)(struct Regs r));
 void UninstallIrqHandler(UInt32 irq);
+
+void irqHandler(struct Regs r);
 
 extern void isr0 ();
 extern void isr1 ();
@@ -62,5 +68,9 @@ extern void irq12();
 extern void irq13();
 extern void irq14();
 extern void irq15();
+
+#ifdef __cplusplus /* only defined in C++ code */
+}
+#endif
 
 #endif

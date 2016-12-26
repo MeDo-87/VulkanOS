@@ -1,16 +1,5 @@
 #include "common.h"
 //I/O
-inline void WriteByte(UInt16 port, UInt8 value)
-{
-	asm volatile("outb %1, %0" : : "dN"(port), "a" (value));
-
-}
-inline UInt8 ReadByte(UInt16 port)
-{
-	UInt8 ret;
-	asm volatile("inb %1, %0" : "=a" (ret) : "dN" (port));
-	return ret;
-}
 UInt16 ReadWord(UInt16 port)
 {
 	UInt16 ret;

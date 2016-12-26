@@ -10,5 +10,5 @@ void* kmallocP(UInt32 size, UInt32* physicalAddress); //allocate memory and prov
 
 void* kmallocAP(UInt32 size, UInt32* physicalAddress); //alligned memory with physical address
 
-
+void* malloc(UInt32 size, UInt32 aligned, UInt32* phys);
 #endif

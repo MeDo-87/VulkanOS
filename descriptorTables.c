@@ -3,16 +3,7 @@
 #include "descriptorTables.h"
 #include "isr.h"
 
-extern void gdtFlush(UInt32);
-extern void idtLoad(UInt32);
 
-
-
-static void initGDT();
-static void initIDT();
-static void initIRQ();
-static void gdtSetGate(UInt32, UInt32, UInt32,UInt8, UInt8);
-static void idtSetGate(UInt32, UInt32, UInt16, UInt8);
 
 struct gdtEntry	gdtEntries[5];
 struct gdtPtr		gdtPtr;
@@ -26,7 +17,7 @@ void initDescriptorTables()
 	initIRQ();
 }
 
-static void initGDT()
+void initGDT()
 {
 	gdtPtr.limit = (sizeof(struct gdtEntry) * 5) - 1;
 	gdtPtr.base = (UInt32)&gdtEntries; 
@@ -40,7 +31,7 @@ static void initGDT()
 	gdtFlush((UInt32)&gdtPtr);
 }
 
-static void gdtSetGate(UInt32 num, UInt32 base, UInt32 limit, UInt8 access, UInt8 gran)
+void gdtSetGate(UInt32 num, UInt32 base, UInt32 limit, UInt8 access, UInt8 gran)
 {
 	gdtEntries[num].baseLow = base & 0xFFFF;
 	gdtEntries[num].baseMiddle = (base >> 16) & 0xFF;
@@ -159,11 +150,11 @@ void isrHandler(struct Regs r)
 	/*From 0 to 32 */
 	//if(r->int_no < 32)
 	{
-		putString("Interrupt was raised\nInterrupt number: ");
-		WriteDec(r.int_no);
-		putString("\nInterrupt Error Code: ");
-		WriteDec(r.err_code);
-		putc('\n');
+		stdio::Monitor::putString("Interrupt was raised\nInterrupt number: ");
+		stdio::Monitor::WriteDec(r.int_no);
+		stdio::Monitor::putString("\nInterrupt Error Code: ");
+		stdio::Monitor::WriteDec(r.err_code);
+		stdio::Monitor::putc('\n');
 	}
 }
 

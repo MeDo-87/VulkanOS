@@ -5,8 +5,16 @@
 #include "common.h"
 #include "monitor.h"
 
-static UInt8 KeyboardStatus = 0; //00scNCSclA  
+static UInt8 KeyboardStatus = 0; //00scNCSclA 
+namespace stdio
+{
+ 
+class Keyboard
+{
+    public:
+    Keyboard();
+    static  void initKeyboard();
+};
 
-void initKeyboard();
-
+}
 #endif

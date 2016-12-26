@@ -133,14 +133,22 @@ static void keyboardCallback(struct Regs r)
 		{
 			caps = 32;
 		}       	
-		putc(ascii - caps);
+		stdio::Monitor::putc(ascii - caps);
 		
 	}
     }
 	
 }
 
-void initKeyboard(UInt32 frequency)
-{
-	InstallIrqHandler(1,&keyboardCallback);
-}
+using namespace stdio;
+
+	Keyboard::Keyboard()
+	{
+		//Initialise the keyboard;
+		InstallIrqHandler(1,&keyboardCallback);
+	}
+	void Keyboard::initKeyboard()
+	{
+		Keyboard Instance = Keyboard();
+	}
+

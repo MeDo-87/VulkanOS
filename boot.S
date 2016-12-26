@@ -28,6 +28,7 @@ mboot:
 ; This will set up our new segment registers. We need to do
 ; something special in order to set CS. We do what is called a
 ; far jump. A jump that includes a segment as well as an offset.
+
 ; This is declared in C as 'extern void gdt_flush();'
 [GLOBAL gdtFlush]     ; Allows the C code to link to this
 

@@ -2,6 +2,13 @@
 #define MONITOR_H_
 #include "common.h"
 
+
+namespace stdio
+{
+
+class Monitor
+{
+	public:
 /* Hardware text mode color constants. */
 enum DisplayColour {
 	BLACK = 0,
@@ -22,19 +29,25 @@ enum DisplayColour {
 	WHITE = 15,
 };
 
-void SetColour(enum DisplayColour foreground, enum DisplayColour backGround);
+static void SetColour(enum DisplayColour foreground, enum DisplayColour backGround);
 
 //Write a single character out to the screen
-void putc(char c);
+static void putc(char c);
 
 //Clear the screen
-void clear();
+static void clear();
 
 //output a null-terminated ASCII string
-void putString(char *c);
+static void putString(char *c);
 
-void WriteHex(UInt32 n);
+static void WriteHex(UInt32 n);
 
-void WriteDec(UInt32 n);
+static void WriteDec(UInt32 n);
 
+private:
+static void moveCursor();
+static void scroll();
+
+};
+};
 #endif

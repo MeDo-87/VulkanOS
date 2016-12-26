@@ -1,14 +1,14 @@
 
 #include "monitor.h"
+using namespace stdio;
 
 #define VMEMORY (UInt16*) 0xB8000
 
 static UInt16* videoMemory = VMEMORY;
 static UInt8 x, y;
-static UInt8 Colour = (BLACK << 4) | (WHITE & 0x0F);
+static UInt8 Colour = (Monitor::BLACK << 4) | (Monitor::WHITE & 0x0F);
 
-
-static void moveCursor()
+void Monitor::moveCursor()
 {
 	UInt16 cursorLocation = y*80 + x;
 	WriteByte(0x3D4, 14);
@@ -17,7 +17,7 @@ static void moveCursor()
 	WriteByte(0x3D5, cursorLocation);
 }
 
-static void scroll()
+void Monitor::scroll()
 {
 	UInt8 attribute = (0 << 4) | (15 & 0x0F);
 	UInt16 blank = 0x20 > (attribute << 8);
@@ -39,11 +39,11 @@ static void scroll()
 	}
 }
 
-void SetColour(enum DisplayColour foreground, enum DisplayColour background)
+void Monitor::SetColour(enum DisplayColour foreground, enum DisplayColour background)
 {
 	Colour = (background << 4) | (foreground & 0x0f);
 }
-void putc(char c)
+void Monitor::putc(char c)
 {
 	UInt16 attribute = Colour << 8;
 	
@@ -86,7 +86,7 @@ void putc(char c)
 }
 
 
-void clear()
+void Monitor::clear()
 {
 	UInt8 attribute = (0 << 4) | (15 & 0x0F);
 	UInt16 blank = 0x20 | (attribute << 8);
@@ -101,7 +101,7 @@ void clear()
 	moveCursor();
 }
 
-void putString(char *c)
+void Monitor::putString(char *c)
 {
 	int i = 0;
 	while(c[i])
@@ -113,7 +113,7 @@ void putString(char *c)
 
 
 
-void WriteHex(UInt32 n)
+void Monitor::WriteHex(UInt32 n)
 {
 	int i = 0;	
 	UInt8* ptr = (UInt8*) &n;
@@ -144,7 +144,7 @@ void WriteHex(UInt32 n)
 	}while(i<4);
 }
 
-void WriteDec(UInt32 n)
+void Monitor::WriteDec(UInt32 n)
 {
 	UInt32 x = n;
 	UInt8 data[] = {0,0,0,0,0,0,0,0,0,0,0,0};
