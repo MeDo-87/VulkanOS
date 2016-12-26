@@ -15,11 +15,11 @@ int main (struct multiboot *mBoot)
 	initDescriptorTables();
 	callConstructors();
 	asm volatile("sti"); 
-	stdio::Monitor::clear();
-	stdio::Monitor::SetColour(stdio::Monitor::BLUE,stdio::Monitor::BLACK);
-	stdio::Monitor::putString("Welcome to VulcanOS Ver. 0.0.1\n");
-	stdio::Monitor::putString("Developed by MeDo87\n");
-	stdio::Monitor::SetColour(stdio::Monitor::WHITE,stdio::Monitor::BLACK);
+	GConsole.clear();
+	GConsole.SetColour(stdio::Monitor::BLUE,stdio::Monitor::BLACK);
+	GConsole << "Welcome to VulcanOS Ver. 0.0.1\n";
+	GConsole << "Developed by MeDo87\n";
+	GConsole.SetColour(stdio::Monitor::WHITE,stdio::Monitor::BLACK);
 		
 	
 	initTimer(18);
