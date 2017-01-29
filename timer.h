@@ -5,7 +5,15 @@
 #include "common.h"
 #include "monitor.h"
 
-void initTimer(UInt32 frequency);
+class Timer
+{
+public:
+    static void initTimer(UInt32 frequency);
 
+private:
+    static UInt32 Tick;
+    static void TimerTick(struct Regs r);
+    
+};
 #endif
 

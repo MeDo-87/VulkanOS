@@ -7,7 +7,7 @@
 #define CAPS 4
 #define NUMLOCK 5
 #define SCROL 6
-
+static UInt8 KeyboardStatus = 0; //00scNCSclA 
 unsigned char qwerty[128] =
     {
 	0, 27, '1', '2', '3', '4', '5', '6', '7', '8',    /* 9 */

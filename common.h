@@ -34,6 +34,13 @@ inline UInt8 ReadByte(UInt16 port)
 }
 
 UInt16 ReadWord(UInt16 port);
+inline void WriteWord(UInt16 port, UInt16 value)
+{
+  
+    asm volatile("outw %1, %0"
+		 :
+		 : "dN"(port), "a"(value));
+}
 
 //Memory functions
 void memcpy(void *src, void *dest, UInt32 length);

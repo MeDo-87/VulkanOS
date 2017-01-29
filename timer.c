@@ -1,19 +1,22 @@
-#include "monitor.h"
+#include "Utils.h"
 #include "timer.h"
-UInt32 tick = 0;
 
-static void timerCallback(struct Regs r)
+UInt32 Timer::Tick = 0;
+
+void Timer::TimerTick(struct Regs r)
 {
-	tick++;
+	Tick++;
+	//GConsole.WriteDec(Tick);
 	//putString("Tick: ");
 	//WriteDec(tick);
 	//putc('\n');
 	
 }
 
-void initTimer(UInt32 frequency)
+void Timer::initTimer(UInt32 frequency)
 {
-	InstallIrqHandler(0,&timerCallback);
+	
+	InstallIrqHandler(0,&Timer::TimerTick);
 
 	UInt32 divisor = 1193180 / frequency;
 	WriteByte(0x43, 0x36); //command that we are setting the divisor

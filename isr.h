@@ -19,6 +19,7 @@ void UninstallIrqHandler(UInt32 irq);
 
 void irqHandler(struct Regs r);
 
+//Interrupt service routines defined in Athe assembly
 extern void isr0 ();
 extern void isr1 ();
 extern void isr2 ();
@@ -52,6 +53,7 @@ extern void isr29 ();
 extern void isr30 ();
 extern void isr31(); 
 
+//Hardware interrupts service routine
 extern void irq0();
 extern void irq1();
 extern void irq2();

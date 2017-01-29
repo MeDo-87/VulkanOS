@@ -41,3 +41,12 @@ void operator delete[](void* p)
 {
 
 }
+
+
+  void __cxa_pure_virtual ()
+  {}
+  void  __cxa_atexit()
+  {}
+
+  void * __dso_handle()
+  {}

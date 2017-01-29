@@ -7,6 +7,8 @@ UInt16 ReadWord(UInt16 port)
 	return ret;
 }
 
+
+
 //Memory functions
 void memcpy(void* src, void* dest, UInt32 length)
 {

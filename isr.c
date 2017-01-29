@@ -27,7 +27,7 @@ void irqHandler(struct Regs r)
 		handler = reinterpret_cast<void (*)(struct Regs r)>(irqRoutines[r.int_no-32]);
 		handler(r);
 	}
-        
+    // Send the end of Intrerupt command   
 	if(r.int_no >= 40)
 	{
 		WriteByte(0xA0, 0x20);

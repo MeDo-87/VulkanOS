@@ -61,6 +61,7 @@ void InterruptDescriptorTable::SetGate(UInt32 num, UInt32 base, UInt16 sel, UInt
 
 void InterruptDescriptorTable::IRQRemap(void)
 {
+    //Remap and initialise the PIC
     WriteByte(0x20, 0x11);
     WriteByte(0xA0, 0x11);
     WriteByte(0x21, 0x20);
