@@ -1,3 +1,36 @@
+
+; This will set up our new segment registers. We need to do
+; something special in order to set CS. We do what is called a
+; far jump. A jump that includes a segment as well as an offset.
+
+; This is declared in C as 'extern void gdt_flush();'
+[GLOBAL gdtFlush]     ; Allows the C code to link to this
+
+gdtFlush:
+    mov eax, [esp + 4]
+    lgdt [eax]        ; Load the GDT with our '_gp' which is a special pointer
+    mov ax, 0x10      ; 0x10 is the offset in the GDT to our data segment
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+    jmp 0x08:flush2   ; 0x08 is the offset to our code segment: Far jump!
+flush2:
+    ret               ; Returns back to the C code!
+
+
+
+[GLOBAL idtLoad]
+; Loads the IDT passed as argument in EAX
+
+idtLoad:
+    mov eax, [esp + 4]
+    lidt [eax]
+    ret
+
+
+
 %macro ISR_NOERRCODE 1  ; define a macro, taking one parameter
   [GLOBAL isr%1]        ; %1 accesses the first parameter.
   isr%1:

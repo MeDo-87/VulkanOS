@@ -5,7 +5,7 @@ CC = ../cross-compiler/bin/bin/i686-elf-g++
 LD = ../cross-compiler/bin/bin/i686-elf-ld
 
 SRC = main.c common.c monitor.c descriptorTables.c isr.c timer.c heap.c keyboard.c 
-CPPSRC = ctordtor.cpp
+CPPSRC = ctordtor.cpp MemoryManager.cpp
 
 ASM = boot.S interrupt.S
 

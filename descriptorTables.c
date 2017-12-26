@@ -149,7 +149,7 @@ void isrHandler(struct Regs r)
     /*From 0 to 32 */
     //if(r->int_no < 32)
     {
-        stdio::Monitor::putString("Interrupt was raised\nInterrupt number: ");
+        stdio::Monitor::putString("Interrupt wasraised\nInterrupt number: ");
         stdio::Monitor::WriteDec(r.int_no);
         stdio::Monitor::putString("\nInterrupt Error Code: ");
         stdio::Monitor::WriteDec(r.err_code);

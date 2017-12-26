@@ -33,6 +33,9 @@ inline UInt8 ReadByte(UInt16 port)
     return ret;
 }
 
+
+
+
 UInt16 ReadWord(UInt16 port);
 inline void WriteWord(UInt16 port, UInt16 value)
 {
@@ -45,7 +48,11 @@ inline void WriteWord(UInt16 port, UInt16 value)
 //Memory functions
 void memcpy(void *src, void *dest, UInt32 length);
 void memset(void *dest, UInt8 data, UInt32 length);
-
+inline void DebugBreak()
+{
+	    WriteWord(0x8A00,0x8A00);
+   	WriteWord(0x8A00,0x08AE0);
+}
 #ifdef __cplusplus /* only defined in C++ code */
 }
 #endif

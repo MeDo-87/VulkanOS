@@ -51,6 +51,13 @@ Monitor operator<< (const char* c)
 	putString(c);
 	return *this;
 }
+
+Monitor operator<< (const int c)
+{
+	WriteDec(c);
+	return *this;
+}
+
 private:
 static void moveCursor();
 static void scroll();

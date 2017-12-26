@@ -18,6 +18,9 @@
 /* Macros. */
 
 /* The magic number for the Multiboot header. */
+#ifndef BOOT_INFO_H
+#define BOOT_INFO_H
+
 #define MULTIBOOT_HEADER_MAGIC 0x1BADB002
 
 /* The flags for the Multiboot header. */
@@ -116,3 +119,5 @@ typedef struct memory_map
 } memory_map_t;
 
 #endif /* ! ASM */
+
+#endif

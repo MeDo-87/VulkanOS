@@ -6,11 +6,11 @@
 ENTRY(start)
 SECTIONS
 {
-  .text 0x100000 :
+  . = 1M;
+  .text BLOCK(4K) : ALIGN(4K)
   {
     code = .; _code = .; __code = .;
     *(.text)
-    . = ALIGN(4096);
   }
 
   .data :
@@ -29,6 +29,7 @@ SECTIONS
   {
     bss = .; _bss = .; __bss = .;
     *(.bss)
+    *(.bootstrap_stack)
     . = ALIGN(4096);
   }
 
