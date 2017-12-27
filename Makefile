@@ -63,7 +63,7 @@ updateImage:
 
 run: updateImage
 	sudo /sbin/losetup /dev/loop0 ./Testing/Bochs/binary/floppy.img
-	sudo bochs -f ./Testing/Bochs/binary/bochsrc.txt
+	sudo bochs --enable-gdb-stub -f ./Testing/Bochs/binary/bochsrc.txt
 	sudo /sbin/losetup -d /dev/loop0 
 
 clean:
