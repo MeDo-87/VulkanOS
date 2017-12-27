@@ -1,12 +1,13 @@
 #include "keyboard.h"
 #include "Utils.h"
 
-#define CTRL 1
-#define SHIFT 2
-#define ALT 3
-#define CAPS 4
-#define NUMLOCK 5
-#define SCROL 6
+constexpr int CTRL = 1;
+constexpr int SHIFT = 2; 
+constexpr int ALT = 3;
+constexpr int CAPS = 4;
+constexpr int NUMLOCK = 5;
+constexpr int SCROL = 6;
+
 static UInt8 KeyboardStatus = 0; //00scNCSclA 
 unsigned char qwerty[128] =
     {
@@ -51,6 +52,7 @@ unsigned char qwerty[128] =
 
 static void keyboardCallback(struct Regs r)
 {
+	(void) r;
     UInt8 scancode;
     UInt8 ascii = 0;
     /* Read from the keyboard's data buffer */
