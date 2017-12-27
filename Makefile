@@ -17,7 +17,7 @@ OUTDIR=$(BUILDDIR)/bin
 TEMPDIR=$(BUILDDIR)/tmp
 
 
-TARGET = kernel
+TARGET = $(OUTDIR)/kernel
 CFLAGS=  -std=c++14 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -Wall -Wextra -pedantic -fno-exceptions -funsigned-char 
 CFLAGS+= -ffreestanding -fomit-frame-pointer -mno-red-zone -mno-3dnow -mno-mmx -fno-asynchronous-unwind-tables
 LDFLAGS=-Tlink.ld
@@ -35,7 +35,7 @@ all:	directories kernel
 		@echo compiling $(TARGET)
 
 kernel: $(ASMOBJS) $(OBJS) $(CPPOBJS)
-	$(LD) $(LDFLAGS)  -o $(OUTDIR)/$(TARGET)  $(ASMOBJS) $(OBJS) $(CPPOBJS) $(LIBS)
+	$(LD) $(LDFLAGS)  -o $(TARGET)  $(ASMOBJS) $(OBJS) $(CPPOBJS) $(LIBS)
 
 $(TEMPDIR)/%.o:$(SRCDIR)/%.cpp
 	$(CC) $(CFLAGS)  -I$(INCLUDEDIR) -c $< -o $@
@@ -53,6 +53,18 @@ $(OUTDIR):
 
 $(TEMPDIR):
 	$(MKDIR_P) $(TEMPDIR)
+
+updateImage:
+	sudo losetup /dev/loop0 ./Testing/Bochs/binary/floppy.img
+	sudo mount /dev/loop0 /mnt
+	sudo cp $(TARGET) /mnt/kernel
+	sudo umount /dev/loop0
+	sudo losetup -d /dev/loop0 
+
+run: updateImage
+	sudo /sbin/losetup /dev/loop0 ./Testing/Bochs/binary/floppy.img
+	sudo bochs -f ./Testing/Bochs/binary/bochsrc.txt
+	sudo /sbin/losetup -d /dev/loop0 
 
 clean:
 	rm *.o kernel
