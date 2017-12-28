@@ -4,8 +4,8 @@
 CC = ../cross-compiler/bin/bin/i686-elf-g++
 LD = ../cross-compiler/bin/bin/i686-elf-ld
 
-SRC = main.c common.c monitor.c descriptorTables.c isr.c timer.c heap.c keyboard.c 
-CPPSRC = ctordtor.cpp MemoryManager.cpp
+SRC = main.c common.c monitor.c descriptorTables.c isr.c timer.c heap.c
+CPPSRC = ctordtor.cpp MemoryManager.cpp keyboard.cpp
 ASM = boot.S interrupt.S
 
 SRCDIR = $(PWD)/VulkanOS/source
@@ -62,12 +62,11 @@ updateImage:
 	sudo losetup -d /dev/loop0 
 
 run: updateImage
-	sudo /sbin/losetup /dev/loop0 ./Testing/Bochs/binary/floppy.img
-	sudo bochs -f ./Testing/Bochs/binary/bochsrc.txt
-	sudo /sbin/losetup -d /dev/loop0 
-
+	sudo bochs -qf ./Testing/Bochs/binary/bochsrc.txt
+	
 clean:
-	rm *.o kernel
+	rm $(TARGET)
+	rm $(TEMPDIR)/*.o
 
 
 

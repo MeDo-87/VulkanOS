@@ -6,5 +6,7 @@
         "**/.git*": true
     }
 ,
-"files.associations": {}
+"files.associations": {},
+"clang-format.style": "google",
+"editor.formatOnSave": true
 }

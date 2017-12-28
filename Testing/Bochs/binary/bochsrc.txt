@@ -1,7 +1,7 @@
 memory: guest=10, host=256
 romimage: file=/usr/share/bochs/BIOS-bochs-latest
 vgaromimage: file=/usr/share/bochs/VGABIOS-lgpl-latest
-floppya: 1_44=/dev/loop0, status=inserted
+floppya: 1_44="./Testing/Bochs/binary/floppy.img", status=inserted
 display_library: sdl, options="gui_debug"
 magic_break: enabled=1
 port_e9_hack: enabled=1
@@ -10,4 +10,4 @@ log: bochsout.txt
 mouse: enabled=0
 clock: sync=realtime
 cpu: ips=1000000
-gdbstub: enabled=1, port=1234, text_base=0, data_base=0, bss_base=0
+
