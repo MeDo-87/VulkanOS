@@ -1,6 +1,6 @@
-#include "common.h"
-#include "monitor.h"
-#include "descriptorTables.h"
+#include "common.hpp"
+#include "monitor.hpp"
+#include "descriptorTables.hpp"
 
 using namespace DescriptorTables;
 

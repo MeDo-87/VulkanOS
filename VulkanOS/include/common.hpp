@@ -17,41 +17,27 @@ static_assert(sizeof(UInt32) == 4, "uint32_t must be 4 bytes long");
 #ifdef __cplusplus /* only defined in C++ code */
 extern "C" {
 #endif
-//I/O
-inline void WriteByte(UInt16 port, UInt8 value)
-{
-    asm volatile("outb %1, %0"
-		 :
-		 : "dN"(port), "a"(value));
+// I/O
+inline void WriteByte(UInt16 port, UInt8 value) {
+  asm volatile("outb %1, %0" : : "dN"(port), "a"(value));
 }
-inline UInt8 ReadByte(UInt16 port)
-{
-    UInt8 ret;
-    asm volatile("inb %1, %0"
-		 : "=a"(ret)
-		 : "dN"(port));
-    return ret;
+inline UInt8 ReadByte(UInt16 port) {
+  UInt8 ret;
+  asm volatile("inb %1, %0" : "=a"(ret) : "dN"(port));
+  return ret;
 }
-
-
-
 
 UInt16 ReadWord(UInt16 port);
-inline void WriteWord(UInt16 port, UInt16 value)
-{
-  
-    asm volatile("outw %1, %0"
-		 :
-		 : "dN"(port), "a"(value));
+inline void WriteWord(UInt16 port, UInt16 value) {
+  asm volatile("outw %1, %0" : : "dN"(port), "a"(value));
 }
 
-//Memory functions
+// Memory functions
 void memcpy(void *src, void *dest, UInt32 length);
 void memset(void *dest, UInt8 data, UInt32 length);
-inline void DebugBreak()
-{
-	    WriteWord(0x8A00,0x8A00);
-   	WriteWord(0x8A00,0x08AE0);
+inline void DebugBreak() {
+  WriteWord(0x8A00, 0x8A00);
+  WriteWord(0x8A00, 0x08AE0);
 }
 #ifdef __cplusplus /* only defined in C++ code */
 }

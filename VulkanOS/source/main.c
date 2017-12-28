@@ -1,12 +1,12 @@
-#include "common.h"
-#include "monitor.h"
-#include "descriptorTables.h"
-#include "timer.h"
-#include "keyboard.h"
-#include "ctordtor.h"
-#include "bootinfo.h"
-#include "Utils.h"
-#include "MemoryManager.h"
+#include "common.hpp"
+#include "monitor.hpp"
+#include "descriptorTables.hpp"
+#include "timer.hpp"
+#include "keyboard.hpp"
+#include "ctordtor.hpp"
+#include "bootinfo.hpp"
+#include "Utils.hpp"
+#include "MemoryManager.hpp"
 
 
 int main(struct multiboot_info *mBoot)

@@ -1,5 +1,5 @@
-#include "heap.h"
-#include "Utils.h"
+#include "heap.hpp"
+#include "Utils.hpp"
 
 using namespace Allocator;
 extern UInt32 end;

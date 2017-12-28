@@ -1,7 +1,7 @@
-#include "common.h"
-#include "monitor.h"
-#include "descriptorTables.h"
-#include "isr.h"
+#include "common.hpp"
+#include "monitor.hpp"
+#include "descriptorTables.hpp"
+#include "isr.hpp"
 
 
 

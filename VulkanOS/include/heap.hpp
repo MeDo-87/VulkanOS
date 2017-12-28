@@ -1,7 +1,7 @@
 #ifndef HEAP_H_
 #define HEAP_H_
 
-#include "common.h"
+#include "common.hpp"
 
 
 namespace Allocator

@@ -4,9 +4,7 @@
         "*.o": true,
         "**/.o": true,
         "**/.git*": true
-    }
-,
-"files.associations": {},
-"clang-format.style": "google",
-"editor.formatOnSave": true
+    },
+    "clang-format.style": "google",
+    "editor.formatOnSave": true
 }

@@ -1,5 +1,5 @@
-#include "Utils.h"
-#include "timer.h"
+#include "Utils.hpp"
+#include "timer.hpp"
 
 UInt32 Timer::Tick = 0;
 

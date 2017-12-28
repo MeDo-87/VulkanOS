@@ -1,5 +1,5 @@
-#include "keyboard.h"
-#include "Utils.h"
+#include "keyboard.hpp"
+#include "Utils.hpp"
 
 constexpr int CTRL = 1;
 constexpr int SHIFT = 2;

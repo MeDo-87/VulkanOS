@@ -1,4 +1,4 @@
-#include "common.h"
+#include "common.hpp"
 //I/O
 UInt16 ReadWord(UInt16 port)
 {

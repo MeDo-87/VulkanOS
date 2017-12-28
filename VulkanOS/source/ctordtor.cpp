@@ -1,5 +1,5 @@
-#include "ctordtor.h"
-#include "heap.h"
+#include "ctordtor.hpp"
+#include "heap.hpp"
 
 void callConstructors() {
   void (**constructor)() = &__CTOR_LIST__;

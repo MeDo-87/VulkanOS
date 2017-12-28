@@ -1,5 +1,5 @@
-#include "common.h"
-#include "isr.h"
+#include "common.hpp"
+#include "isr.hpp"
 namespace DescriptorTables
 {
 

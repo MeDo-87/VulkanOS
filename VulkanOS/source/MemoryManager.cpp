@@ -1,6 +1,6 @@
-#include "MemoryManager.h"
-#include "monitor.h"
-#include "Utils.h"
+#include "MemoryManager.hpp"
+#include "monitor.hpp"
+#include "Utils.hpp"
 
 //! 8 blocks per byte
 #define PMMNGR_BLOCKS_PER_BYTE 8

@@ -2,8 +2,8 @@
 //Constructed immedietly when the kernel is loaded using the MultiBoot Boot Info structure data.
 #ifndef MEM_MANAGER_H
 #define MEM_MANAGER_H
-#include "bootinfo.h"
-#include "common.h"
+#include "bootinfo.hpp"
+#include "common.hpp"
 
 class MemoryManager
 {

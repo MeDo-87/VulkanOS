@@ -1,6 +1,6 @@
 #ifndef ISR_H
 #define ISR_H
-#include "common.h"
+#include "common.hpp"
 #ifdef __cplusplus /* only defined in C++ code */
 extern "C" {
 #endif

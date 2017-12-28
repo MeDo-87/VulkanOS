@@ -1,9 +1,9 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
-#include "isr.h"
-#include "common.h"
-#include "monitor.h"
+#include "isr.hpp"
+#include "common.hpp"
+#include "monitor.hpp"
 
 
 namespace stdio
