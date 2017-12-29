@@ -148,7 +148,7 @@ public:
   void Send(char OutByte);
   void Send(char *OutData, Int32 length);
   char ReadByte();
-  Int32 ReadData(char *Data); // We need better API
+  void ReadData(char *InData, Int32 length); // We need better API
 
 private:
   void SetLineControlRegister();
@@ -156,7 +156,8 @@ private:
   void SetFIFOControlRegister();
   void SetModemControlRegister();
   void SetBuadRate();
-  bool IsReady();
+  bool IsReadyToSend();
+  bool IsDataAvailable();
 
 private:
   Int32 BaudRate = 115600;

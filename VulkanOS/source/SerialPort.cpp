@@ -1,5 +1,6 @@
 #include "SerialPort.hpp"
 #include "Utils.hpp"
+#include "isr.hpp"
 constexpr UInt32 PORTCLOCK = 115200;
 
 static_assert(sizeof(InterruptEnableRegister) == 1,
@@ -15,7 +16,19 @@ static_assert(sizeof(LineStatusRegister) == 1,
 static_assert(sizeof(ModemStatusRegister) == 1,
               "ModemStatusRegister must be 1 byte long");
 
-SerialPort::SerialPort() {}
+static void SerialPortHandler(struct Regs r) {
+  InterruptIDRegister IIR;
+  IIR.FromInt8(::ReadByte(0x03F8 + 2));
+
+  while (!IIR.InterruptID.Pending) {
+    if (IIR.InterruptID.ID == Interrupt::ReadyToSend) {
+      WriteByte(0x03F8, 'G');
+    }
+    IIR.FromInt8(::ReadByte(0x03F8 + 2));
+  };
+}
+// SerialPort::SerialPort() {}
+
 SerialPort::SerialPort(Int16 InPort, Int32 InBaudRate, Parity InParity,
                        CharacterLenght Len, StopBit InStopBit)
     : Port(InPort), BaudRate(InBaudRate), PortParity(InParity), CharLength(Len),
@@ -31,6 +44,13 @@ SerialPort::SerialPort(Int16 InPort, Int32 InBaudRate, Parity InParity,
   SetLineControlRegister();
   SetFIFOControlRegister();
   SetModemControlRegister();
+  InstallIrqHandler(4, &SerialPortHandler);
+
+  Regs.IER.DataAvailable = false;
+  Regs.IER.TransmissionEmpty = true;
+  Regs.IER.StatusSignal = false;
+  Regs.IER.LineStatus = false;
+  WriteByte(Port + IEROffset, Regs.IER);
 }
 
 void SerialPort::SetBuadRate() {
@@ -71,24 +91,43 @@ void SerialPort::SetLineControlRegister() {
   WriteByte(Port + LCROffset, Regs.LCR);
 }
 
-bool SerialPort::IsReady() {
+bool SerialPort::IsReadyToSend() {
 
   Regs.LSR.FromInt8(::ReadByte(Port + LSROffset));
   return Regs.LSR.TransmissionEmpty;
 }
 
+bool SerialPort::IsDataAvailable() {
+  Regs.LSR.FromInt8(::ReadByte(Port + LSROffset));
+  return Regs.LSR.DataAvaliable;
+}
+
 void SerialPort::Send(char OutByte) {
 
-  while (!IsReady()) {
+  while (!IsReadyToSend()) {
   };
   WriteByte(Port, OutByte);
 }
+
 void SerialPort::Send(char *OutData, Int32 length) {
-  while (!IsReady()) {
+  while (!IsReadyToSend()) {
   };
   for (Int32 i = 0; i < length; i++) {
     WriteByte(Port, OutData[i]);
   }
 }
-char SerialPort::ReadByte() { return '\0'; }
-Int32 SerialPort::ReadData(char *InData) { return '\0'; } // We need better API
+char SerialPort::ReadByte() {
+  while (!IsDataAvailable()) {
+  };
+  return ::ReadByte(Port);
+}
+void SerialPort::ReadData(char *InData, Int32 length) {
+
+  for (Int32 i = 0; i < length; i++) {
+    while (!IsDataAvailable()) {
+    };
+    InData[i] = ::ReadByte(Port);
+  }
+
+  return;
+} // We need better API
