@@ -150,6 +150,7 @@ private:
   void DisableInterrupts();
   void SetFIFOControlRegister();
   void SetModemControlRegister();
+  void SetBuadRate();
 
 private:
   Int32 BaudRate = 115600;

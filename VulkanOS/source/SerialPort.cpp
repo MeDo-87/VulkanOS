@@ -25,33 +25,27 @@ SerialPort::SerialPort(Int16 InPort, Int32 InBaudRate, Parity InParity,
 
   DisableInterrupts();
   Regs.LCR.DLAB = true;
-  WriteWord(0x8A00, 0x8A00);
-  WriteWord(0x8A00, 0x08AE0);
   WriteByte(Port + LCROffset, static_cast<UInt8>(Regs.LCR));
-  GConsole << "LCR ";
-  stdio::Monitor::WriteDec(Regs.LCR);
-  GConsole << "\n";
-  DebugBreak();
-  UInt16 buaddivider = PORTCLOCK / BaudRate;
-  WriteWord(Port, buaddivider); // TODO: Doesn't work
-  GConsole << "BAUD divider ";
-  stdio::Monitor::WriteDec(buaddivider);
-  GConsole << "\n";
-  DebugBreak();
+  SetBuadRate();
+
   SetLineControlRegister();
-  DebugBreak();
   SetFIFOControlRegister();
-  DebugBreak();
   SetModemControlRegister();
 }
+
+void SerialPort::SetBuadRate() {
+  UInt16 buaddivider = PORTCLOCK / BaudRate;
+  UInt8 *bd = reinterpret_cast<UInt8 *>(&buaddivider);
+
+  WriteByte(Port, bd[0]); // TODO: Doesn't work
+  WriteByte(Port + 1, bd[1]);
+}
+
 void SerialPort::SetModemControlRegister() {
   Regs.MCR.DataTerminalReady = 1;
   Regs.MCR.RequestToSend = 1;
   Regs.MCR.OUT = 2;
   WriteByte(Port + MCROffset, Regs.MCR);
-  GConsole << "MCR: ";
-  stdio::Monitor::WriteDec(Regs.MCR);
-  GConsole << "\n";
 }
 void SerialPort::SetFIFOControlRegister() {
   Regs.IIR.FIFOControl.enable = true;
@@ -60,9 +54,6 @@ void SerialPort::SetFIFOControlRegister() {
   Regs.IIR.FIFOControl.RxBuffer =
       InterruptIDRegister::FCR::FIFOBuffer::FOURTEEN;
   WriteByte(Port + IIROffset, static_cast<UInt8>(Regs.IIR));
-  GConsole << "IIR: ";
-  stdio::Monitor::WriteDec(Regs.IIR);
-  GConsole << "\n";
 }
 void SerialPort::DisableInterrupts() {
   Regs.IER.DataAvailable = false;
@@ -70,10 +61,6 @@ void SerialPort::DisableInterrupts() {
   Regs.IER.StatusSignal = false;
   Regs.IER.LineStatus = false;
   WriteByte(Port + IEROffset, Regs.IER);
-
-  GConsole << "IER: ";
-  stdio::Monitor::WriteDec(Regs.IER);
-  GConsole << "\n";
 }
 
 void SerialPort::SetLineControlRegister() {
@@ -82,18 +69,14 @@ void SerialPort::SetLineControlRegister() {
   Regs.LCR.sb = PortStopBit;
   Regs.LCR.DLAB = false;
   WriteByte(Port + LCROffset, Regs.LCR);
-  GConsole << "LCR: ";
-  stdio::Monitor::WriteDec(Regs.LCR);
-  GConsole << "\n";
 }
 
 void SerialPort::SendByte(char OutByte) {
-  auto IsReady = [](UInt8 Port) { return ::ReadByte(Port + 5) & 0x20; };
-
-  while (IsReady(Port)) {
+  auto IsReady = [](UInt16 Port) { return ::ReadByte(Port + 5) & 0x20; };
+  while (!IsReady(Port)) {
   };
 
-  char t = ::ReadByte(Port);
+  WriteByte(Port, OutByte);
 }
 void SerialPort::SendData(char *OutData) {}
 char SerialPort::ReadByte() { return '\0'; }
