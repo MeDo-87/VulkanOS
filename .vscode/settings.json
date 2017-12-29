@@ -5,6 +5,6 @@
         "**/.o": true,
         "**/.git*": true
     },
-    "clang-format.style": "google",
+    "clang-format.style": "LLVM",
     "editor.formatOnSave": true
 }
