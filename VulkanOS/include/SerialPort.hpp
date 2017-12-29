@@ -14,6 +14,11 @@ template <typename T> struct IntConverter {
     T *derived = static_cast<T *>(this);
     memset(derived, 0, sizeof(T));
   }
+  T FromInt8(UInt8 InByte) {
+    T *derived = static_cast<T *>(this);
+    memset(derived, InByte, sizeof(UInt8));
+    return *derived;
+  }
   operator UInt8() const {
     const T *derived = static_cast<const T *>(this);
     auto IntPtr = reinterpret_cast<const UInt8 *>(derived);
@@ -140,10 +145,10 @@ public:
   SerialPort(Int16 InPort, Int32 InBuadRate, Parity InParity = Parity::NONE,
              CharacterLenght Len = CharacterLenght::EIGHT,
              StopBit InStopBit = StopBit::ONE);
-  void SendByte(char OutByte);
-  void SendData(char *OutData);
+  void Send(char OutByte);
+  void Send(char *OutData, Int32 length);
   char ReadByte();
-  char ReadData(); // We need better API
+  Int32 ReadData(char *Data); // We need better API
 
 private:
   void SetLineControlRegister();
@@ -151,6 +156,7 @@ private:
   void SetFIFOControlRegister();
   void SetModemControlRegister();
   void SetBuadRate();
+  bool IsReady();
 
 private:
   Int32 BaudRate = 115600;

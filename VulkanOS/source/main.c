@@ -52,8 +52,8 @@ int main(struct multiboot_info *mBoot) {
   DebugBreak();
   auto Port = SerialPort(0x03F8, 9600);
   GConsole << "Writing to serial 1\n";
-  Port.SendByte('A');
-
+  Port.Send('A');
+  Port.Send("DAD", 4);
   // putc(35/0);
   callDestructors();
   return 0xDEADBABE;

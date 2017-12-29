@@ -71,13 +71,24 @@ void SerialPort::SetLineControlRegister() {
   WriteByte(Port + LCROffset, Regs.LCR);
 }
 
-void SerialPort::SendByte(char OutByte) {
-  auto IsReady = [](UInt16 Port) { return ::ReadByte(Port + 5) & 0x20; };
-  while (!IsReady(Port)) {
-  };
+bool SerialPort::IsReady() {
 
+  Regs.LSR.FromInt8(::ReadByte(Port + LSROffset));
+  return Regs.LSR.TransmissionEmpty;
+}
+
+void SerialPort::Send(char OutByte) {
+
+  while (!IsReady()) {
+  };
   WriteByte(Port, OutByte);
 }
-void SerialPort::SendData(char *OutData) {}
+void SerialPort::Send(char *OutData, Int32 length) {
+  while (!IsReady()) {
+  };
+  for (Int32 i = 0; i < length; i++) {
+    WriteByte(Port, OutData[i]);
+  }
+}
 char SerialPort::ReadByte() { return '\0'; }
-char SerialPort::ReadData() { return '\0'; } // We need better API
+Int32 SerialPort::ReadData(char *InData) { return '\0'; } // We need better API
