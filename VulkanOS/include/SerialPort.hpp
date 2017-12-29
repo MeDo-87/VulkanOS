@@ -10,6 +10,10 @@ enum class StopBit : UInt8 { ONE = 0, TWO = 1 };
 // Experiment with CRTP
 
 template <typename T> struct IntConverter {
+  IntConverter() {
+    T *derived = static_cast<T *>(this);
+    memset(derived, 0, sizeof(T));
+  }
   operator UInt8() const {
     const T *derived = static_cast<const T *>(this);
     auto IntPtr = reinterpret_cast<const UInt8 *>(derived);
@@ -17,44 +21,69 @@ template <typename T> struct IntConverter {
   };
 };
 
-struct InterruptEnableRegister
+struct InterruptEnableRegister // R+W
     : public IntConverter<InterruptEnableRegister> /*+1*/ {
-  bool DataAvailable : 1;
-  bool TransmissionEmpty : 1;
-  bool LineStatus : 1;
-  bool StatusSignal : 1;
+  bool DataAvailable : 1;     // Data Ready interrupt. Raised when data is ready
+  bool TransmissionEmpty : 1; // Transmission Empty interrupt. Raised when data
+                              // is sent
+  bool LineStatus : 1;        // Status Interrupt. Raised due to tx errors
+  bool StatusSignal : 1; // Modem Status Interrupt. Raised when delta bits on
+                         // MSR is set
 
 private:
-  char UNUSED : 4;
+  char UNUSED : 4; // Should be zero
 };
+enum class Interrupt : UInt8 {
+  delta_MSR = 0b000,
+  ReadyToSend = 0b001,
+  DataAvaliable = 0b010,
+  Error = 0b011,
+  NoFIFO = 0b110
 
-// struct  : public IntConverter<InterruptIDRegister> /*+2*/ {
-union InterruptIDRegister {
-  struct IID : public IntConverter<IID> {
-    bool Pending : 1;
-    bool ID : 3;
-
+};
+/*+2*/ // {
+struct InterruptIDRegister : public IntConverter<InterruptIDRegister> {
+  struct IID {        /*Read Only Register*/
+    bool Pending : 1; // 1 => No Interrupt. 0 = > Interrupt
+    Interrupt ID : 3; // 011 => highest. Error. read LST
+    // 010 => second Data is available. Service by reading Port offset 0
+    // 110 => second No FIFO action. read port offset 0
+    // 001 => 3rd, ready to send. Write to port offset 0
+    // 000 => lowest, delta flag on MSR is set. Read MSR
   private:
     char UNUSED : 2;
 
   public:
-    bool FIFO : 2;
+    bool FIFO : 2; // set if FIFO enabled. clear otherwise.
+    // when reading IIR mask bits 4,5,6,7
   };
-  struct FCR : public IntConverter<FCR> {
+  struct FCR /*Write Only Register*/ {
     bool enable : 1;
     bool RxReset : 1;
     bool TxReset : 1;
-    bool DMASelect : 1;
 
   private:
+    bool DMASelect : 1; // clear. not available
     char UNUSED : 2;
 
   public:
-    bool RxTrigger : 2;
+    enum class FIFOBuffer : UInt8 {
+      // Size in bytes of the receiver FIFOBuffer
+      ONE = 0,
+      FOUR = 1,
+      EIGHT = 2,
+      FOURTEEN = 3
+    };
+    FIFOBuffer RxBuffer : 2;
+  };
+  union {
+    IID InterruptID;
+    FCR FIFOControl;
   };
 };
 
-struct LineControlRegister : public IntConverter<LineControlRegister> /*+3*/ {
+struct LineControlRegister
+    : /*r/w*/ public IntConverter<LineControlRegister> /*+3*/ {
   CharacterLenght len : 2;
   StopBit sb : 1;
   Parity parity : 3;
@@ -64,36 +93,36 @@ private:
 
 public:
   bool DLAB : 1;
-
-public:
-  LineControlRegister()
-      : len(CharacterLenght::FIVE), sb(StopBit::ONE), parity(Parity::NONE),
-        UNUSED(0), DLAB(false){};
 };
 
-struct ModemControlRegister : public IntConverter<ModemControlRegister> /*+4*/ {
+struct ModemControlRegister
+    : /*r/w*/ public IntConverter<ModemControlRegister> /*+4*/ {
   bool DataTerminalReady : 1;
   bool RequestToSend : 1; //
-  bool OUT : 2;           // Not used. high bit is connected to interrupt line
-  bool LOOP : 1;
+  UInt8 OUT : 2; // Not used. high bit is connected to interrupt line. Best to
+                 // set to 1
+  bool LoopBack : 1;
 
 private:
   char UNUSED : 3;
 };
 
-struct LineStatusRegister : public IntConverter<LineStatusRegister> //+5
+// Error detection depending on iterrupt mode that is raised. As well as polled
+// mode operation. Same as naive implementation
+struct LineStatusRegister : /*r/w*/ public IntConverter<LineStatusRegister> //+5
 {
   bool DataAvaliable : 1;
   bool OverrunError : 1;
   bool ParityError : 1;
   bool FrameError : 1;
   bool BrokenLine : 1;
-  bool TransmissionEmpty : 1;
-  bool FinishedSending : 1;
+  bool TransmissionEmpty : 1; // Can write new data to send
+  bool FinishedSending : 1;   // no transmission is running
   bool FIFOErr : 1;
 };
 
-struct ModemStatusRegister : public IntConverter<ModemStatusRegister> //+6
+struct ModemStatusRegister
+    : /*r/w*/ public IntConverter<ModemStatusRegister> //+6
 {
   bool DeltaClearToSend : 1;
   bool DeltaReadyToSend : 1;
@@ -117,15 +146,37 @@ public:
   char ReadData(); // We need better API
 
 private:
+  void SetLineControlRegister();
+  void DisableInterrupts();
+  void SetFIFOControlRegister();
+  void SetModemControlRegister();
+
+private:
   Int32 BaudRate = 115600;
   Int8 Port = 0x03F8;
   Parity PortParity = Parity::NONE;
   CharacterLenght CharLength = CharacterLenght::EIGHT;
   StopBit PortStopBit = StopBit::ONE;
 
-  InterruptEnableRegister IntReg;
+  struct PortRegisters {
+    UInt8 DataBuffer =
+        0; // Recieve buffer register/Transmit hold register RBR>THR
+           // Port +0
+    InterruptEnableRegister IER; // Port +1
+    InterruptIDRegister IIR;     // Port +2
+    LineControlRegister LCR;     // Port +3
+    ModemControlRegister MCR;    // Port +4
+    LineStatusRegister LSR;      // Port +5
+    ModemStatusRegister MSR;     // Port +6
+  } Regs;
+  static_assert(sizeof(PortRegisters) == 7, "Wrong port register size");
 
-  LineControlRegister LCReg;
+  static constexpr UInt8 IEROffset = 1;
+  static constexpr UInt8 IIROffset = 2;
+  static constexpr UInt8 LCROffset = 3;
+  static constexpr UInt8 MCROffset = 4;
+  static constexpr UInt8 LSROffset = 5;
+  static constexpr UInt8 MSROffset = 6;
 };
 
 #endif // SERIALPORT_HPP_
