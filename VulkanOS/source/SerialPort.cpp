@@ -1,5 +1,5 @@
 #include "SerialPort.hpp"
-
+#include "Utils.hpp"
 constexpr UInt32 PORTCLOCK = 115200;
 
 static_assert(sizeof(InterruptEnableRegister) == 1,
@@ -16,7 +16,7 @@ static_assert(sizeof(ModemStatusRegister) == 1,
               "ModemStatusRegister must be 1 byte long");
 
 SerialPort::SerialPort() {}
-SerialPort::SerialPort(Int8 InPort, Int32 InBaudRate, Parity InParity,
+SerialPort::SerialPort(Int16 InPort, Int32 InBaudRate, Parity InParity,
                        CharacterLenght Len, StopBit InStopBit)
     : Port(InPort), BaudRate(InBaudRate), PortParity(InParity), CharLength(Len),
       PortStopBit(InStopBit)
@@ -25,13 +25,23 @@ SerialPort::SerialPort(Int8 InPort, Int32 InBaudRate, Parity InParity,
 
   DisableInterrupts();
   Regs.LCR.DLAB = true;
+  WriteWord(0x8A00, 0x8A00);
+  WriteWord(0x8A00, 0x08AE0);
   WriteByte(Port + LCROffset, static_cast<UInt8>(Regs.LCR));
-
+  GConsole << "LCR ";
+  stdio::Monitor::WriteDec(Regs.LCR);
+  GConsole << "\n";
+  DebugBreak();
   UInt16 buaddivider = PORTCLOCK / BaudRate;
-  WriteWord(Port, buaddivider);
-
+  WriteWord(Port, buaddivider); // TODO: Doesn't work
+  GConsole << "BAUD divider ";
+  stdio::Monitor::WriteDec(buaddivider);
+  GConsole << "\n";
+  DebugBreak();
   SetLineControlRegister();
+  DebugBreak();
   SetFIFOControlRegister();
+  DebugBreak();
   SetModemControlRegister();
 }
 void SerialPort::SetModemControlRegister() {
@@ -39,6 +49,9 @@ void SerialPort::SetModemControlRegister() {
   Regs.MCR.RequestToSend = 1;
   Regs.MCR.OUT = 2;
   WriteByte(Port + MCROffset, Regs.MCR);
+  GConsole << "MCR: ";
+  stdio::Monitor::WriteDec(Regs.MCR);
+  GConsole << "\n";
 }
 void SerialPort::SetFIFOControlRegister() {
   Regs.IIR.FIFOControl.enable = true;
@@ -47,6 +60,9 @@ void SerialPort::SetFIFOControlRegister() {
   Regs.IIR.FIFOControl.RxBuffer =
       InterruptIDRegister::FCR::FIFOBuffer::FOURTEEN;
   WriteByte(Port + IIROffset, static_cast<UInt8>(Regs.IIR));
+  GConsole << "IIR: ";
+  stdio::Monitor::WriteDec(Regs.IIR);
+  GConsole << "\n";
 }
 void SerialPort::DisableInterrupts() {
   Regs.IER.DataAvailable = false;
@@ -54,6 +70,10 @@ void SerialPort::DisableInterrupts() {
   Regs.IER.StatusSignal = false;
   Regs.IER.LineStatus = false;
   WriteByte(Port + IEROffset, Regs.IER);
+
+  GConsole << "IER: ";
+  stdio::Monitor::WriteDec(Regs.IER);
+  GConsole << "\n";
 }
 
 void SerialPort::SetLineControlRegister() {
@@ -62,6 +82,9 @@ void SerialPort::SetLineControlRegister() {
   Regs.LCR.sb = PortStopBit;
   Regs.LCR.DLAB = false;
   WriteByte(Port + LCROffset, Regs.LCR);
+  GConsole << "LCR: ";
+  stdio::Monitor::WriteDec(Regs.LCR);
+  GConsole << "\n";
 }
 
 void SerialPort::SendByte(char OutByte) {

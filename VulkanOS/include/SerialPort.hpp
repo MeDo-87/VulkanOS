@@ -137,7 +137,7 @@ struct ModemStatusRegister
 class SerialPort {
 public:
   SerialPort();
-  SerialPort(Int8 InPort, Int32 InBuadRate, Parity InParity = Parity::NONE,
+  SerialPort(Int16 InPort, Int32 InBuadRate, Parity InParity = Parity::NONE,
              CharacterLenght Len = CharacterLenght::EIGHT,
              StopBit InStopBit = StopBit::ONE);
   void SendByte(char OutByte);
@@ -153,7 +153,7 @@ private:
 
 private:
   Int32 BaudRate = 115600;
-  Int8 Port = 0x03F8;
+  UInt16 Port = 0x03F8;
   Parity PortParity = Parity::NONE;
   CharacterLenght CharLength = CharacterLenght::EIGHT;
   StopBit PortStopBit = StopBit::ONE;

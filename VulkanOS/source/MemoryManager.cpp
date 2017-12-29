@@ -73,7 +73,7 @@ void MemoryManager::init(multiboot_info *mBoot) {
   Manager.ReserveMemory(
       0x00, ((UInt32)end + Manager.MaxMemoryBlocks / PMMNGR_BLOCKS_PER_BYTE) /
                 PMMNGR_BLOCK_SIZE);
-  DebugBreak();
+
   // Create the Map here
   GConsole << "MemoryManager initialized with ";
   GConsole.WriteDec(Manager.TotalPhysicalMemory);
