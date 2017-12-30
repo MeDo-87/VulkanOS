@@ -141,7 +141,7 @@ struct ModemStatusRegister
 
 class SerialPort {
 public:
-  SerialPort();
+  // SerialPort();
   SerialPort(Int16 InPort, Int32 InBuadRate, Parity InParity = Parity::NONE,
              CharacterLenght Len = CharacterLenght::EIGHT,
              StopBit InStopBit = StopBit::ONE);
