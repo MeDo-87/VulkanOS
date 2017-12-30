@@ -6,11 +6,11 @@
 #include "monitor.hpp"
 
 class Timer {
- public:
+public:
   static void initTimer(UInt32 frequency);
 
- private:
+private:
   static UInt32 Tick;
-  static void TimerTick(struct Regs r);
+  static void InterruptHandler(struct Regs r);
 };
 #endif

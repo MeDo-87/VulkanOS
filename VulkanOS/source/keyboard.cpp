@@ -8,7 +8,7 @@ constexpr int CAPS = 4;
 constexpr int NUMLOCK = 5;
 constexpr int SCROL = 6;
 
-static UInt8 KeyboardStatus = 0;  // 00scNCSclA
+static UInt8 KeyboardStatus = 0; // 00scNCSclA
 unsigned char qwerty[128] = {
     0,       27,  '1',   '2', '3',   '4', '5', '6', '7',  '8', /* 9 */
     '9',     '0', '-',   '=', '\b',                            /* Backspace */
@@ -65,23 +65,6 @@ static void keyboardCallback(struct Regs r) {
       WriteByte(0x60, lights);
     } else {
       switch (ascii) {
-        case ALT:
-          KeyboardStatus ^= 0b00000001;
-          break;
-        case CTRL:
-          KeyboardStatus ^= 0b00000010;
-          break;
-        case SHIFT:
-          KeyboardStatus ^= 0b00000100;
-          break;
-      }
-    }
-  } else {
-    ascii = qwerty[scancode];
-    UInt8 caps = 0;
-    UInt8 shift = ((KeyboardStatus >> 2) & 0x01);
-    UInt8 capslock = ((KeyboardStatus >> 5) & 0x01);
-    switch (ascii) {
       case ALT:
         KeyboardStatus ^= 0b00000001;
         break;
@@ -91,33 +74,50 @@ static void keyboardCallback(struct Regs r) {
       case SHIFT:
         KeyboardStatus ^= 0b00000100;
         break;
-      case SCROL:
-        KeyboardStatus ^= 0b00001000;
-        break;
-      case NUMLOCK:
-        KeyboardStatus ^= 0b00010000;
-        break;
-      case CAPS:
-        KeyboardStatus ^= 0b00100000;
-        break;
-      default:
-        /* Here, a key was just pressed. Please note that if you
-  *  hold a key down, you will get repeated key press
-  *  interrupts. */
+      }
+    }
+  } else {
+    ascii = qwerty[scancode];
+    UInt8 caps = 0;
+    UInt8 shift = ((KeyboardStatus >> 2) & 0x01);
+    UInt8 capslock = ((KeyboardStatus >> 5) & 0x01);
+    switch (ascii) {
+    case ALT:
+      KeyboardStatus ^= 0b00000001;
+      break;
+    case CTRL:
+      KeyboardStatus ^= 0b00000010;
+      break;
+    case SHIFT:
+      KeyboardStatus ^= 0b00000100;
+      break;
+    case SCROL:
+      KeyboardStatus ^= 0b00001000;
+      break;
+    case NUMLOCK:
+      KeyboardStatus ^= 0b00010000;
+      break;
+    case CAPS:
+      KeyboardStatus ^= 0b00100000;
+      break;
+    default:
+      /* Here, a key was just pressed. Please note that if you
+*  hold a key down, you will get repeated key press
+*  interrupts. */
 
-        /* Just to show you how this works, we simply translate
-  *  the keyboard scancode into an ASCII value, and then
-  *  display it to the screen. You can get creative and
-  *  use some flags to see if a shift is pressed and use a
-  *  different layout, or you can add another 128 entries
-  *  to the above layout to correspond to 'shift' being
-  *  held. If shift is held using the larger lookup table,
-  *  you would add 128 to the scancode when you look for it */
+      /* Just to show you how this works, we simply translate
+*  the keyboard scancode into an ASCII value, and then
+*  display it to the screen. You can get creative and
+*  use some flags to see if a shift is pressed and use a
+*  different layout, or you can add another 128 entries
+*  to the above layout to correspond to 'shift' being
+*  held. If shift is held using the larger lookup table,
+*  you would add 128 to the scancode when you look for it */
 
-        if ((capslock || shift) && ascii < 123 && ascii > 96) {
-          caps = 32;
-        }
-        stdio::Monitor::putc(ascii - caps);
+      if ((capslock || shift) && ascii < 123 && ascii > 96) {
+        caps = 32;
+      }
+      stdio::Monitor::putc(ascii - caps);
     }
   }
 }
@@ -126,9 +126,12 @@ using namespace stdio;
 
 Keyboard::Keyboard() {
   // Initialise the keyboard;
-  InstallIrqHandler(1, &keyboardCallback);
+  auto *callback = new FreeDelegate<void, struct Regs>(&keyboardCallback);
+  InstallIrqHandler(1, callback);
 }
 void Keyboard::initKeyboard() {
-  InstallIrqHandler(1, &keyboardCallback);
+
+  auto *callback = new FreeDelegate<void, struct Regs>(&keyboardCallback);
+  InstallIrqHandler(1, callback);
   GConsole << "Keyboard Installed";
 }

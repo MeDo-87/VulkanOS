@@ -1,6 +1,6 @@
 #include "SerialPort.hpp"
 #include "Utils.hpp"
-#include "isr.hpp"
+
 constexpr UInt32 PORTCLOCK = 115200;
 
 static_assert(sizeof(InterruptEnableRegister) == 1,
@@ -16,19 +16,18 @@ static_assert(sizeof(LineStatusRegister) == 1,
 static_assert(sizeof(ModemStatusRegister) == 1,
               "ModemStatusRegister must be 1 byte long");
 
-static void SerialPortHandler(struct Regs r) {
-  InterruptIDRegister IIR;
-  IIR.FromInt8(::ReadByte(0x03F8 + 2));
+// SerialPort::SerialPort() {}
+void SerialPort::InterruptHandler(struct Regs CPURegs) {
 
-  while (!IIR.InterruptID.Pending) {
-    if (IIR.InterruptID.ID == Interrupt::ReadyToSend) {
-      WriteByte(0x03F8, 'G');
+  Regs.IIR.FromInt8(::ReadByte(0x03F8 + 2));
+
+  while (!Regs.IIR.InterruptID.Pending) {
+    if (Regs.IIR.InterruptID.ID == Interrupt::ReadyToSend) {
+      WriteByte(0x03F8, 'D');
     }
-    IIR.FromInt8(::ReadByte(0x03F8 + 2));
+    Regs.IIR.FromInt8(::ReadByte(0x03F8 + 2));
   };
 }
-// SerialPort::SerialPort() {}
-
 SerialPort::SerialPort(Int16 InPort, Int32 InBaudRate, Parity InParity,
                        CharacterLenght Len, StopBit InStopBit)
     : Port(InPort), BaudRate(InBaudRate), PortParity(InParity), CharLength(Len),
@@ -44,7 +43,9 @@ SerialPort::SerialPort(Int16 InPort, Int32 InBaudRate, Parity InParity,
   SetLineControlRegister();
   SetFIFOControlRegister();
   SetModemControlRegister();
-  InstallIrqHandler(4, &SerialPortHandler);
+  auto *callback = new DelegateOneArg<SerialPort, struct Regs>(
+      this, &SerialPort::InterruptHandler);
+  InstallIrqHandler(4, callback);
 
   Regs.IER.DataAvailable = false;
   Regs.IER.TransmissionEmpty = true;

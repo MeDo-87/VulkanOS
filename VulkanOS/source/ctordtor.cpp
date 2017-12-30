@@ -3,7 +3,7 @@
 
 void callConstructors() {
   void (**constructor)() = &__CTOR_LIST__;
-  int total = *(int*)constructor;
+  int total = *(int *)constructor;
   constructor++;
   while (total) {
     (*constructor)();
@@ -13,7 +13,7 @@ void callConstructors() {
 }
 void callDestructors() {
   void (**deconstructor)() = &__DTOR_LIST__;
-  int total = *(int*)deconstructor;
+  int total = *(int *)deconstructor;
   deconstructor++;
   while (total) {
     (*deconstructor)();
@@ -22,16 +22,16 @@ void callDestructors() {
   }
 }
 
-void* operator new(UInt32 size) { return Allocator::kmalloc(size); }
-void operator delete(void* p) {}
+void *operator new(UInt32 size) { return Allocator::kmalloc(size); }
+void operator delete(void *p) {}
 
-void* operator new[](UInt32 size) { return Allocator::kmalloc(size); }
-void operator delete[](void* p) {}
-
+void *operator new[](UInt32 size) { return Allocator::kmalloc(size); }
+void operator delete[](void *p) {}
+void operator delete(void *p, UInt32 size){};
 void __cxa_pure_virtual() {}
 void __cxa_atexit() {}
 
-void* __dso_handle() {}
+void *__dso_handle() {}
 
 void __cxa_guard_acquire() {}
 

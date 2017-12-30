@@ -19,7 +19,7 @@ TEMPDIR=$(BUILDDIR)/tmp
 
 TARGET = $(OUTDIR)/kernel
 CFLAGS=  -std=c++14 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -Wall -Wextra -pedantic -fno-exceptions -funsigned-char 
-CFLAGS+= -ffreestanding -fomit-frame-pointer -mno-red-zone -mno-3dnow -mno-mmx -fno-asynchronous-unwind-tables
+CFLAGS+= -ffreestanding -fomit-frame-pointer -mno-red-zone -mno-3dnow -mno-mmx -fno-asynchronous-unwind-tables -fno-rtti
 LDFLAGS=-Tlink.ld
 ASFLAGS=-felf
 

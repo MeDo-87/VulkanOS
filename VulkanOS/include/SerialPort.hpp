@@ -1,6 +1,7 @@
 #ifndef SERIALPORT_HPP_
 #define SERIALPORT_HPP_
 #include "common.hpp"
+#include "isr.hpp"
 
 enum class Parity : UInt8 { NONE = 0, ODD = 1, EVEN = 3, MARK = 5, SPACE = 7 };
 
@@ -150,6 +151,8 @@ public:
   char ReadByte();
   void ReadData(char *InData, Int32 length); // We need better API
 
+  void InterruptHandler(Regs CPURegs);
+
 private:
   void SetLineControlRegister();
   void DisableInterrupts();
@@ -158,6 +161,8 @@ private:
   void SetBuadRate();
   bool IsReadyToSend();
   bool IsDataAvailable();
+
+  // Store the DelegateObject to call back
 
 private:
   Int32 BaudRate = 115600;
