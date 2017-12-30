@@ -6,12 +6,10 @@
 DelegateBase<void, Regs> *irqRoutines[16] = {0, 0, 0, 0, 0, 0, 0, 0,
                                              0, 0, 0, 0, 0, 0, 0, 0};
 
-// void InstallIrqHandler(UInt32 irq, void (*handler)(struct Regs r)) {
-//   irqRoutines[irq] = reinterpret_cast<void *>(handler);
-// }
 void InstallIrqHandler(UInt32 irq, DelegateBase<void, Regs> *Delegate) {
   irqRoutines[irq] = Delegate;
 }
+
 void UninstallIrqHandler(UInt32 irq) {
   delete irqRoutines[irq];
   irqRoutines[irq] = 0;
@@ -20,9 +18,7 @@ void UninstallIrqHandler(UInt32 irq) {
 // Need to acknowledge the IRQ and raise end of IRQ to PIC
 void irqHandler(struct Regs r) {
   if (irqRoutines[r.int_no - 32] != 0) {
-    // void (*handler)(struct Regs r);
     auto handler = irqRoutines[r.int_no - 32];
-    // reinterpret_cast<void (*)(struct Regs r)>(irqRoutines[r.int_no - 32]);
     (*handler)(r);
   }
   // Send the end of Intrerupt command
