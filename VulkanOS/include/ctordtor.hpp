@@ -21,5 +21,6 @@ void operator delete(void *p, UInt32 size);
 
 void *operator new[](UInt32 size);
 void operator delete[](void *p);
+void operator delete[](void *p, UInt32 size);
 
 #endif

@@ -24,10 +24,12 @@ void callDestructors() {
 
 void *operator new(UInt32 size) { return Allocator::kmalloc(size); }
 void operator delete(void *p) {}
+void operator delete(void *p, UInt32 size) {}
 
 void *operator new[](UInt32 size) { return Allocator::kmalloc(size); }
 void operator delete[](void *p) {}
-void operator delete(void *p, UInt32 size){};
+void operator delete[](void *p, UInt32 size) {}
+
 void __cxa_pure_virtual() {}
 void __cxa_atexit() {}
 

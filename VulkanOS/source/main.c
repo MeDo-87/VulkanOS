@@ -10,11 +10,7 @@
 #include "timer.hpp"
 
 int main(struct multiboot_info *mBoot) {
-  // WriteByte(0xe9, 'A');
-  // WriteWord(0x8A00,0x8A00);
-  // WriteWord(0x8A00,0x08AE0);
-  // UInt32 kernelSize = (UInt32)end -(UInt32) start;
-
+  
   UInt32 memSize = 1024 + mBoot->mem_lower + mBoot->mem_upper;
 
   initDescriptorTables();
@@ -25,13 +21,7 @@ int main(struct multiboot_info *mBoot) {
   GConsole << "Welcome to VulcanOS Ver. 0.0.1\n";
   GConsole << "Developed by MeDo87\n";
   GConsole.SetColour(stdio::Monitor::WHITE, stdio::Monitor::BLACK);
-  // GConsole << "Kernel Start: ";
-  // GConsole.WriteHex((UInt32)start);
-  // GConsole << " Kernel End ";
-  // GConsole.WriteHex((UInt32)end);
-  // GConsole << " Total size: ";
-  // GConsole.WriteHex((UInt32)kernelSize);
-  // GConsole << "\n";
+  
   MemoryManager::init(mBoot);
 
   //! initialize the physical memory manager
@@ -50,11 +40,15 @@ int main(struct multiboot_info *mBoot) {
   stdio::Keyboard::initKeyboard();
 
   DebugBreak();
-  auto Port = SerialPort(0x03F8, 9600);
-  GConsole << "Writing to serial 1\n";
-  Port.Send('A');
-  Port.Send("DAD", 4);
-  // putc(35/0);
+  {
+    auto Port = SerialPort(0x03F8, 9600);
+    GConsole << "Writing to serial 1\n";
+    Port.Send('A');
+    Port.Send('B');
+    Port.Send('C');
+  }
+  DebugBreak();
+  
   callDestructors();
   return 0xDEADBABE;
 }
