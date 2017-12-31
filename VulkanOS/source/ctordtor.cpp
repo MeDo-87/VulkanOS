@@ -1,6 +1,6 @@
 #include "ctordtor.hpp"
+#include "Utils.hpp"
 #include "heap.hpp"
-
 void callConstructors() {
   void (**constructor)() = &__CTOR_LIST__;
   int total = *(int *)constructor;
@@ -31,10 +31,3 @@ void operator delete[](void *p) {}
 void operator delete[](void *p, UInt32 size) {}
 
 void __cxa_pure_virtual() {}
-void __cxa_atexit() {}
-
-void *__dso_handle() {}
-
-void __cxa_guard_acquire() {}
-
-void __cxa_guard_release() {}
