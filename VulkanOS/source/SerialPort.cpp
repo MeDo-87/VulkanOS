@@ -19,6 +19,7 @@ void SerialPort::InterruptHandler(struct Regs CPURegs) {
     Regs.IIR.FromInt8(::ReadByte(0x03F8 + 2));
   };
 }
+
 SerialPort::SerialPort(Int16 InPort, Int32 InBaudRate, Parity InParity,
                        CharacterLenght Len, StopBit InStopBit)
     : BaudRate(InBaudRate),
@@ -39,6 +40,10 @@ SerialPort::SerialPort(Int16 InPort, Int32 InBaudRate, Parity InParity,
   auto *callback = new DelegateOneArg<SerialPort, struct Regs>(
       this, &SerialPort::InterruptHandler);
   InstallIrqHandler(4, callback);
+  constexpr if(!Blocking)
+  {
+    EnableInterrupts();
+  }
 }
 
 SerialPort::~SerialPort() {
@@ -67,11 +72,20 @@ void SerialPort::SetFIFOControlRegister() {
   Regs.IIR.FIFOControl.RxBuffer = FIFOBuffer::FOURTEEN;
   WriteByte(Port + IIROffset, static_cast<UInt8>(Regs.IIR));
 }
+
 void SerialPort::DisableInterrupts() {
   Regs.IER.DataAvailable = false;
   Regs.IER.TransmissionEmpty = false;
   Regs.IER.StatusSignal = false;
   Regs.IER.LineStatus = false;
+  WriteByte(Port + IEROffset, Regs.IER);
+}
+
+void SerialPort::EnableInterrupts(){
+  Regs.IER.DataAvailable = true;
+  Regs.IER.TransmissionEmpty = true;
+  Regs.IER.StatusSignal = true;
+  Regs.IER.LineStatus = true;
   WriteByte(Port + IEROffset, Regs.IER);
 }
 
